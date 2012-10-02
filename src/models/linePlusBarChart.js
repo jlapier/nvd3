@@ -20,6 +20,7 @@ nv.models.linePlusBarChart = function() {
     , getY = function(d) { return d.y }
     , color = nv.utils.defaultColor()
     , showLegend = true
+    , alignLegend = 'right'
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
@@ -170,7 +171,8 @@ nv.models.linePlusBarChart = function() {
       // Legend
 
       if (showLegend) {
-        legend.width( availableWidth / 2 );
+        legend.width( availableWidth / 2 )
+            .align(alignLegend);
 
         g.select('.nv-legendWrap')
             .datum(data.map(function(series) {
@@ -186,8 +188,13 @@ nv.models.linePlusBarChart = function() {
                              - margin.top - margin.bottom;
         }
 
-        g.select('.nv-legendWrap')
-            .attr('transform', 'translate(' + ( availableWidth / 2 ) + ',' + (-margin.top) +')');
+        if ( alignLegend == 'right' ) {
+          g.select('.nv-legendWrap')
+              .attr('transform', 'translate(' + ( availableWidth / 2 ) + ',' + (-margin.top) +')');
+        } else { // assume left  TODO: add center
+          g.select('.nv-legendWrap')
+              .attr('transform', 'translate(0,' + (-margin.top) +')');
+        }
       }
 
       //------------------------------------------------------------
@@ -391,6 +398,12 @@ nv.models.linePlusBarChart = function() {
   chart.showLegend = function(_) {
     if (!arguments.length) return showLegend;
     showLegend = _;
+    return chart;
+  };
+
+  chart.alignLegend = function(_) {
+    if (!arguments.length) return alignLegend;
+    alignLegend = _;
     return chart;
   };
 
